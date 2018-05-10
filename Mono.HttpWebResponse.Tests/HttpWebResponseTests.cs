@@ -73,7 +73,19 @@ namespace Mono.HttpWebResponse.Tests
     System.Net.HttpWebResponse GetResponse(Uri uri)
     {
       var request = (HttpWebRequest) WebRequest.Create(uri);
-      return (System.Net.HttpWebResponse) request.GetResponse();
+      return GetResponseWhichMightBeResultOfException(request);
+    }
+
+    System.Net.HttpWebResponse GetResponseWhichMightBeResultOfException(HttpWebRequest request)
+    {
+      try
+      {
+        return request.GetResponse() as System.Net.HttpWebResponse;
+      }
+      catch(WebException ex)
+      {
+        return ex.Response as System.Net.HttpWebResponse;
+      }
     }
   }
 }
