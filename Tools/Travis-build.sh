@@ -4,6 +4,8 @@ NUNIT_CONSOLE_VERSION="3.8.0"
 NUNIT_PATH="./packages/NUnit.ConsoleRunner.${NUNIT_CONSOLE_VERSION}/tools/nunit3-console.exe"
 TESTS_ASSEMBLY_PATH="Mono.HttpWebResponse.Tests/bin/Debug/Mono.HttpWebResponse.Tests.dll"
 
+exit_status=1
+
 stop_if_failure()
 {
   code="$1"
@@ -27,9 +29,12 @@ run_unit_tests()
 {
   echo "Running unit tests ..."
   mono "$NUNIT_PATH" "$TESTS_ASSEMBLY_PATH"
+  exit_status=$?
 }
 
 build_solution
 Tools/Start-webserver.sh
 run_unit_tests
 Tools/Stop-webserver.sh
+
+exit $exit_status
