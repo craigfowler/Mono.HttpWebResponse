@@ -2,6 +2,8 @@ version: '{branch}-{build}'
 
 init:
   - cmd: git config --global core.autocrlf true
+install:
+  - cmd: nuget restore Mono.HttpWebResponse.sln
 test: off
 artifacts:
   - path: Mono.HttpWebResponse.WebApp
