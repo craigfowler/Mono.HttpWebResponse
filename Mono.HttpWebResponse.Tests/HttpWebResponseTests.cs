@@ -40,6 +40,12 @@ namespace Mono.HttpWebResponse.Tests
       ApiUriForOKResponse = new Uri(String.Concat(ApiUrlBase, Boolean.TrueString.ToLowerInvariant())),
       ApiUriForInternalServerErrorResponse = new Uri(String.Concat(ApiUrlBase, Boolean.FalseString.ToLowerInvariant()));
 
+    /* The ORIGINAL reproduction case/code for this is:
+     * https://github.com/SeleniumHQ/selenium/blob/selenium-3.4.0/dotnet/src/webdriver/Remote/HttpCommandExecutor.cs#L143
+     * 
+     * (the highlighted line is where the crash occurred).
+     */
+
     [Test]
     public void StreamReader_ReadToEnd_should_not_raise_exception_for_200_OK_web_request()
     {
@@ -73,6 +79,7 @@ namespace Mono.HttpWebResponse.Tests
     System.Net.HttpWebResponse GetResponse(Uri uri)
     {
       var request = (HttpWebRequest) WebRequest.Create(uri);
+      request.Timeout = 2000;
       return GetResponseWhichMightBeResultOfException(request);
     }
 
@@ -84,6 +91,11 @@ namespace Mono.HttpWebResponse.Tests
       }
       catch(WebException ex)
       {
+        // Access these two properties from the exception,
+        // because the original repro case does
+        object throwAway = ex.Status;
+        throwAway = ex.Response;
+
         return ex.Response as System.Net.HttpWebResponse;
       }
     }
