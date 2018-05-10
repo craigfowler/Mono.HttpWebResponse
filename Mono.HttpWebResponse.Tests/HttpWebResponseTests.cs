@@ -54,11 +54,21 @@ namespace Mono.HttpWebResponse.Tests
       if(response == null) Assert.Pass("Response was null, but that's OK");
 
       // Act
-      var responseStream = response.GetResponseStream();
-      using(var reader = new StreamReader(responseStream, Encoding.UTF8))
+      StreamReader reader = null;
+
+      // Intentionally not a using block with Dispose, in order to mirror original repro code
+      try
       {
+        var responseStream = response.GetResponseStream();
+        reader = new StreamReader(responseStream, Encoding.UTF8);
+
         // Assert
         Assert.That(() => reader.ReadToEnd(), Throws.Nothing);
+      }
+      finally
+      {
+        if(reader != null)
+          reader.Close();
       }
     }
 
@@ -70,11 +80,21 @@ namespace Mono.HttpWebResponse.Tests
       if(response == null) Assert.Pass("Response was null, but that's OK");
 
       // Act
-      var responseStream = response.GetResponseStream();
-      using(var reader = new StreamReader(responseStream, Encoding.UTF8))
+      StreamReader reader = null;
+
+      // Intentionally not a using block with Dispose, in order to mirror original repro code
+      try
       {
+        var responseStream = response.GetResponseStream();
+        reader = new StreamReader(responseStream, Encoding.UTF8);
+
         // Assert
         Assert.That(() => reader.ReadToEnd(), Throws.Nothing);
+      }
+      finally
+      {
+        if(reader != null)
+          reader.Close();
       }
     }
 
