@@ -33,7 +33,7 @@ echo_nuget_version_to_console()
 restore_solution_nuget_packages()
 {
   echo "Restoring NuGet packages for the solution ..."
-  mono "$NUGET_PATH" restore Agiil.sln
+  mono "$NUGET_PATH" restore Mono.HttpWebResponse.sln
   stop_if_failure $? "Restore NuGet packages"
 }
 

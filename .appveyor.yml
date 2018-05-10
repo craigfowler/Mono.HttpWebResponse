@@ -1,0 +1,15 @@
+version: '{branch}-{build}'
+
+init:
+  - cmd: git config --global core.autocrlf true
+test: off
+artifacts:
+  - path: Mono.HttpWebResponse.WebApp
+    name: TestWebsite
+deploy:
+  - provider: Local
+    TestWebsite.deploy_website: true
+    TestWebsite.site_name: "Test Web App"
+    TestWebsite.port: 8080
+after_deploy:
+- cmd: nunit3-console.exe Mono.HttpWebResponse.Tests/bin/Debug/Mono.HttpWebResponse.Tests.dll
