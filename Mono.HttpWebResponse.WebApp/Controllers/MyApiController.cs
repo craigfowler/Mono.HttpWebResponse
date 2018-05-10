@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Web.Http;
 
 namespace Mono.HttpWebResponse.WebApp.Controllers
@@ -17,6 +18,8 @@ namespace Mono.HttpWebResponse.WebApp.Controllers
         // Chosen by fair dice roll, guaranteed to be random.
         return 4;
 
+      // Perhaps it's latency that causes problems?
+      Thread.Sleep(5000);
 
       throw new HttpResponseException(GetExceptionResponseMessage());
     }
