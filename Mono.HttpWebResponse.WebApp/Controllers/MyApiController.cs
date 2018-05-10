@@ -32,6 +32,9 @@ long response.";
       var lotsOfSpam = String.Join(", ", Enumerable.Range(0, 500).Select(x => "spam"));
       outputString = String.Concat(outputString,  lotsOfSpam);
 
+      // To be closer still to the repo case, I'm adding a trailing null character
+      outputString = String.Concat(outputString, '\0');
+
       output.Content = new StringContent(outputString);
 
       return output;
