@@ -38,7 +38,7 @@ namespace Mono.HttpWebResponse.Tests
 
     static readonly Uri
       ApiUriForOKResponse = new Uri(String.Concat(ApiUrlBase, Boolean.TrueString.ToLowerInvariant())),
-      ApiUriForForbiddenResponse = new Uri(String.Concat(ApiUrlBase, Boolean.FalseString.ToLowerInvariant()));
+      ApiUriForInternalServerErrorResponse = new Uri(String.Concat(ApiUrlBase, Boolean.FalseString.ToLowerInvariant()));
 
     [Test]
     public void StreamReader_ReadToEnd_should_not_raise_exception_for_200_OK_web_request()
@@ -56,10 +56,10 @@ namespace Mono.HttpWebResponse.Tests
     }
 
     [Test]
-    public void StreamReader_ReadToEnd_should_not_raise_exception_for_403_Forbidden_web_request()
+    public void StreamReader_ReadToEnd_should_not_raise_exception_for_500_InternalServerError_web_request()
     {
       // Arrange
-      var response = GetResponse(ApiUriForForbiddenResponse);
+      var response = GetResponse(ApiUriForInternalServerErrorResponse);
 
       // Act
       var responseStream = response.GetResponseStream();
