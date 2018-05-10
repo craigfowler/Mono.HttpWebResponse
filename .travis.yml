@@ -1,0 +1,18 @@
+sudo: false
+language: csharp
+solution: Mono.HttpWebResponse.sln
+mono:
+    - 5.10.1
+    - 5.12.0
+ 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+    packages:
+      - mono-xsp4
+      - libstdc++6-4.7-dev
+
+install: ./Tools/Travis-install.sh
+
+script: ./Tools/Travis-build.sh  
