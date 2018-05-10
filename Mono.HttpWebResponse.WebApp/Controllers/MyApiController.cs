@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Mono.HttpWebResponse.WebApp.Controllers
@@ -12,31 +13,31 @@ namespace Mono.HttpWebResponse.WebApp.Controllers
   {
     // Simple API GET action.  If the parameter is true then it will return a valid HTTP 200 response.
     // If the parameter is false then it will return an HTTP 500 Internal Server Error
-    public int Get(bool success)
+    public async Task<int> Get(bool success)
     {
       if(success)
         // Chosen by fair dice roll, guaranteed to be random.
         return 4;
 
-      // Perhaps it's latency that causes problems?
-      Thread.Sleep(5000);
+      var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
 
-      throw new HttpResponseException(GetExceptionResponseMessage());
+      responseMessage.Content = await GetHttpContentAsync();
+
+      throw new HttpResponseException(responseMessage);
     }
 
-    HttpResponseMessage GetExceptionResponseMessage()
+    async Task<HttpContent> GetHttpContentAsync()
     {
-      var output = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-
       var outputString = GetLongResponseText();
 
       // To be closer still to the original repro case, I'm adding some trailing null
       // character (the original repro case has some, apparently)
       outputString = AddSomeTrailingNullCharacters(outputString, 3);
 
-      output.Content = new StringContent(outputString, Encoding.UTF8, "application/json");
+      // Inject some arbitrary latency on the response content
+      await Task.Run(() => Thread.Sleep(5000));
 
-      return output;
+      return new StringContent(outputString, Encoding.UTF8, "application/json");
     }
 
     string GetLongResponseText()
